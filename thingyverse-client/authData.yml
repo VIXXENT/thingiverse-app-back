@@ -1,0 +1,6 @@
+thingiverse:
+  authorize:
+    url = https://www.thingiverse.com/login/oauth/authorize
+    client-id = b2de5a3ecb494ab9040b
+    client-secret = 7fb62ab0061ec771793f71287d239746
+    app-token = f711e27f5acc64fae2a16b2d79914398
