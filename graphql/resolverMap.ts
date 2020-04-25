@@ -1,19 +1,15 @@
 import { IResolvers } from 'graphql-tools';
 import * as thingiverseClient from '../thingyverse-client/client';
+export const sort = thingiverseClient.sort;
 
 const resolverMap: IResolvers = {
     Query:{
-        helloWorld(_, args:void): string{
-            console.log('ResolverMap: Query: args:', args); // [VLOG]
-            return `👋 Hello world! 👋`;
-        },
-
-        thing: async (_, { id }) => {
+        thingDetail: async (_, { id }) => {
             return await thingiverseClient.getThingDetails(id);
         },
 
-        things: async(_) =>{
-            return await thingiverseClient.getPopularThings();
+        things: async(_, queryParams:{sort:string, page?:number}) =>{
+            return await thingiverseClient.searchThings(queryParams);
         }
     }
 

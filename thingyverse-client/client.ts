@@ -11,14 +11,20 @@ const searchResource = "/search";
 const thingsResource = "/things";
 const searchUrl = thingiverseApiUrl+searchResource;
 const thingUrl = thingiverseApiUrl+thingsResource;
-const sortPopular = "popular";
+export const sort = {
+    relevant: 'relevant',
+    text: 'text',
+    popular: 'popular',
+    makes: 'makes',
+    newest: 'newest'
+}
 
 export const sendPopularThings = function (res: express.Response) {
     try {
         const args = {
             parameters: {
                 access_token: getAccessToken(),
-                sort: sortPopular
+                sort: sort.popular
             }
         };
 
@@ -34,24 +40,24 @@ export const sendPopularThings = function (res: express.Response) {
     }
 }
 
-export const getPopularThings = async function():Promise<any>{
+export const searchThings = async function({sort, page}:{sort:string, page?:number}):Promise<Array<any>>{
     const client = new RestClient(null, thingiverseApiUrl);
     const options:IRequestOptions = {
         queryParameters: {
             params: {                
                 access_token: getAccessToken(),
-                sort: sortPopular
+                sort,
+                page: (page?page:1)
             }
         }
     };
-
+    
     return client.get(searchResource, options)
         .catch(logError)
         .then((response:any)=>{
-            console.log('getPopularThings promise resolved, result:', response, '. Returning...')
+            console.log('searchThings promise resolved, result:', response, '. Returning...')
             return response.result;
         });
-
 }
 
 export const sendThingDetails = function(thingId:any, res: express.Response){
@@ -90,7 +96,6 @@ export const getThingDetails = function(thingId:any):Promise<any>{
         .catch(logError)
         .then((response:void|IRestResponse<any>)=>{
             if(response !== undefined){
-                console.log('getThingDetails promise resolved, result:', response, '. Returning...')
                 return response.result;
             }else{
                 return null;
