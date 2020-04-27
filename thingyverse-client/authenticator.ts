@@ -70,8 +70,9 @@ export const sendTokenInfo = function (res: express.Response) {
         const tokenData: any = cache.get("tokenData");
         if (!tokenData) {
             const errorMessage = "No token registered in caché!";
-            res.status(500).send(errorMessage);
-            throw new Error(errorMessage);
+            res.status(200).send(JSON.stringify({message: errorMessage}));
+            console.warn("WARNING: ", errorMessage);
+            return;
         }
 
         const args = {
