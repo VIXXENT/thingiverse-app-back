@@ -1,6 +1,11 @@
 import express from "express";
 import * as authenticator from "../thingyverse-client/authenticator";
 import * as thingiverseClient from "../thingyverse-client/client"
+import cors from 'cors';
+
+var corsOptions = cors({
+    origin: 'http://localhost:3000'
+  })
 
 function logRequest(req: express.Request){
     const fullUrl = `[${req.method}] ${req.protocol}://${req.host}${req.originalUrl}`;
@@ -9,7 +14,7 @@ function logRequest(req: express.Request){
 
 export default function(app:express.Application){
 
-    app.get('/thingiverse/authCode', (req: express.Request, res: express.Response) => {
+    app.get('/thingiverse/authCode', corsOptions, (req: express.Request, res: express.Response) => {
         logRequest(req);
         authenticator.requestAndStoreAuthorizationToken(req, res);
     })
@@ -20,7 +25,7 @@ export default function(app:express.Application){
         authenticator.authenticate(res);
     })
 
-    app.get('/thingiverse/validate-token', (req:express.Request, res:express.Response)=>{
+    app.get('/thingiverse/validate-token', corsOptions, (req:express.Request, res:express.Response)=>{
         logRequest(req);
         authenticator.sendTokenInfo(res);
     })

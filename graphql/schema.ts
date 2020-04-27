@@ -12,6 +12,8 @@ const typeDefs = gql`
         thingDetail(id: ID!): ThingDetail
         creator(id: ID!): Creator
         creators: [Creator]
+        ThingDetail(id: ID!): ThingDetail
+        images: [Image]
     }
 
     type Thing {
@@ -92,6 +94,7 @@ const typeDefs = gql`
         remix_count: Int
         make_count: Int
         app_count: Int
+        images: [Image]
     }
 
     type Image {
