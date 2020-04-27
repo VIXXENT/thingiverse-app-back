@@ -55,7 +55,7 @@ export const requestAndStoreAuthorizationToken = function (req: express.Request,
                 bodyParser.urlencoded
 
                 cache.set("tokenData", tokenData, 0);
-                res.send('token received and stored!');
+                res.send({message:'token received and stored!'});
             } catch (error) {
                 sendErrorResponse(error, res);
             }
@@ -87,7 +87,8 @@ export const sendTokenInfo = function (res: express.Response) {
                 let message = `Current token is ${JSON.stringify(tokenData)}\n`;
                 message += `Token info: ${JSON.stringify(data)}\n`;
                 message += `Token is${isTokenValid ? " " : " NOT "}valid.`;
-                res.send(message);
+                const json = {...data, ...tokenData, message};
+                res.send(JSON.stringify(json));
             } catch (error) {
                 sendErrorResponse(error, res);
             }
@@ -100,6 +101,7 @@ export const sendTokenInfo = function (res: express.Response) {
 }
 
 function sendErrorResponse(error: any, response: express.Response) {
+    console.log("Sending error response", error);
     try{
         response.status(500).send(JSON.stringify(error))
     }catch(errorShowingErrror){

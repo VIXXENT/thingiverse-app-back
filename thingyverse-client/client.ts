@@ -9,6 +9,7 @@ const oldClient = new Client();
 const thingiverseApiUrl = 'https://api.thingiverse.com';
 const searchResource = "/search";
 const thingsResource = "/things";
+const imagesResource = "/images";
 const searchUrl = thingiverseApiUrl+searchResource;
 const thingUrl = thingiverseApiUrl+thingsResource;
 export const sort = {
@@ -55,7 +56,6 @@ export const searchThings = async function({sort, page}:{sort:string, page?:numb
     return client.get(searchResource, options)
         .catch(logError)
         .then((response:any)=>{
-            console.log('searchThings promise resolved, result:', response, '. Returning...')
             return response.result;
         });
 }
@@ -101,6 +101,22 @@ export const getThingDetails = function(thingId:any):Promise<any>{
                 return null;
             }
         });
+}
+
+export const getThingImages = function(thingId:string):Promise<any>{
+    const client = new RestClient(null, thingiverseApiUrl);
+    const options:IRequestOptions = {
+        queryParameters: {
+            params: {
+                access_token: getAccessToken()
+            }
+        }
+    };
+
+    return client.get<any>(`${thingsResource}/${thingId}${imagesResource}`, options)
+    .then((response)=>response?response.result:null)
+    .catch(logError)
+    ;
 }
 
 function getAccessToken(){
