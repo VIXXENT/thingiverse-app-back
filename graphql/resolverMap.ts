@@ -20,9 +20,6 @@ const resolverMap: IResolvers = {
         },
 
         thingsCursoredList: async(_, queryParams: { sort: string, cursor?: Cursor }) => {
-            console.log("RESOLVER_MAP - MORE_THINGS - queryParams:", queryParams);
-            console.log("RESOLVER_MAP - MORE_THINGS - sort:", queryParams.sort);
-            console.log("RESOLVER_MAP - MORE_THINGS - cursor:", queryParams.cursor);
             const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:10};
             const results = await thingiverseClient.searchThings(queryParams);
             const list:ThingsCursoredList = {

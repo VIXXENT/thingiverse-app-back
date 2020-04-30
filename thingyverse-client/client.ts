@@ -41,7 +41,7 @@ export const sendPopularThings = function (res: express.Response) {
         sendErrorResponse(error, res)
     }
 }
-//{ sort: string, cursor?: Cursor }
+
 export const searchThings = async function({sort, cursor}:{sort:string, cursor?:Cursor}):Promise<Array<any>>{
     const client = new RestClient(null, thingiverseApiUrl);
     const options:IRequestOptions = {
