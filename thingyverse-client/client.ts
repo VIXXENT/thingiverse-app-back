@@ -1,6 +1,7 @@
 import cache from "../cache/cache";
 import express from "express";
 import {RestClient, IRequestOptions, IRestResponse} from "typed-rest-client";
+import { Cursor } from "../graphql/resolverMap";
 
 //import { Client } from "node-rest-client"; //incompatible with "noImplicitAny: true"
 const Client = (require("node-rest-client") as any).Client;//TODO: change to a typed rest client
@@ -41,14 +42,15 @@ export const sendPopularThings = function (res: express.Response) {
     }
 }
 
-export const searchThings = async function({sort, page}:{sort:string, page?:number}):Promise<Array<any>>{
+export const searchThings = async function({sort, cursor}:{sort:string, cursor?:Cursor}):Promise<Array<any>>{
     const client = new RestClient(null, thingiverseApiUrl);
     const options:IRequestOptions = {
         queryParameters: {
             params: {                
                 access_token: getAccessToken(),
                 sort,
-                page: (page?page:1)
+                page: (cursor?.page?cursor.page:1),
+                per_page: (cursor?.per_page?cursor.per_page:10),
             }
         }
     };

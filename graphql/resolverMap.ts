@@ -2,23 +2,37 @@ import { IResolvers } from 'graphql-tools';
 import * as thingiverseClient from '../thingyverse-client/client';
 export const sort = thingiverseClient.sort;
 
+export interface Cursor {
+    page: number,
+    per_page: number
+}
+
+interface ThingsCursoredList{
+    cursor: Cursor
+    hasMore: Boolean
+    things: any[]
+}
+
 const resolverMap: IResolvers = {
     Query: {
-        thingDetail: async (_, { id }) => {
+        thing: async (_, { id }) => {
             return await thingiverseClient.getThingDetails(id);
         },
 
-        things: async (_, queryParams: { sort: string, page?: number }) => {
-            return await thingiverseClient.searchThings(queryParams);
-        },
+        thingsCursoredList: async(_, queryParams: { sort: string, cursor?: Cursor }) => {
+            const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:10};
+            const results = await thingiverseClient.searchThings(queryParams);
+            const list:ThingsCursoredList = {
+                cursor,
+                hasMore: (results.length>0),
+                things: results 
+            }
 
-        images: (thing: any) => {
-            console.log('parent thing: ', thing);
-            return "TEST";
-        },
+            return list;
+        }
     },
     
-    ThingDetail: {
+    Thing: {
         images: async (thing: any) => {
             return await thingiverseClient.getThingImages(thing.id);
         },
