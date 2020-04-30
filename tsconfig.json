@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "es2020",
+      "target": "es2019",
       "module": "commonjs",
       "outDir": "target", // compiled files output directory
       "sourceMap": true, // allows the debugger to find the ts files when debugging

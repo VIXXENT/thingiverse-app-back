@@ -7,27 +7,82 @@ import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
     type Query {
-        helloWorld: String!
-        things(sort:String!, page:Int): [Thing]
-        thingDetail(id: ID!): ThingDetail
+        thingsCursoredList(sort:String!, cursor:CursorInput): ThingsCursoredList
+        thing(id: ID!): Thing
         creator(id: ID!): Creator
         creators: [Creator]
-        ThingDetail(id: ID!): ThingDetail
         images: [Image]
     }
 
+    input CursorInput {
+        page: Int
+        per_page: Int
+    }
+
+    type Cursor{
+        page: Int
+        per_page: Int
+    }
+
+    type ThingsCursoredList{
+        cursor: Cursor
+        hasMore: Boolean
+        things: [Thing]
+    }
+
     type Thing {
-        id: ID!
-        name: String
-        url: String
-        public_url: String
+        added: String
+        ancestors_url: String
+        app_count: Int
+        app_id: ID
+        categories_url: String
+        collect_count: Int
+        comment_count: Int
         created_at: String
-        thumbnail: String
-        preview_image: String
         creator: Creator
-        is_private: Boolean
-        is_purchased: Boolean
-        is_published: Boolean
+        default_image: Image
+        derivatives_url: String
+        description: String
+        description_html: String
+        details: String
+        details_parts: [DetailsPart]
+        download_count: Int
+        edu_details:String
+        edu_details_parts:[EduDetailsPart]
+        education: Education
+        file_count: Int
+        files_url: String
+        id: ID
+        images: [Image]
+        images_url: String
+        in_library: Boolean
+        instructions: String
+        instructions_html: String
+        is_collected: Boolean
+        is_featured: String
+        is_liked: Boolean
+        is_nsfw: Boolean
+        is_private: Int
+        is_published: Int
+        is_purchased: Int
+        is_watched: Boolean
+        is_wip: Int
+        layout_count: Int
+        layouts_url: String
+        license: String
+        like_count: Int
+        likes_url: String
+        make_count: Int
+        modified: String
+        name: String
+        preview_image: String
+        print_history_count: Int
+        public_url: String
+        remix_count: Int
+        tags_url: String
+        thumbnail: String
+        url: String
+        view_count: Int
     }
 
     type Creator{
@@ -42,59 +97,6 @@ const typeDefs = gql`
         is_following: Boolean
         location: String
         cover: String
-    }
-
-    type ThingDetail{
-        id: ID
-        name: String
-        thumbnail: String
-        url: String
-        public_url: String
-        creator: Creator
-        added: String
-        modified: String
-        is_published: Int
-        is_wip: Int
-        is_featured: String
-        is_nsfw: Boolean
-        like_count: Int
-        is_liked: Boolean
-        collect_count: Int
-        is_collected: Boolean
-        comment_count: Int
-        is_watched: Boolean
-        default_image: Image
-        description: String
-        instructions: String
-        description_html: String
-        instructions_html: String
-        details: String
-        details_parts: [DetailsPart]
-        edu_details:String
-        edu_details_parts:[EduDetailsPart]
-        license: String
-        files_url: String
-        images_url: String
-        likes_url: String
-        ancestors_url: String
-        derivatives_url: String
-        tags_url: String
-        categories_url: String
-        file_count: Int
-        layout_count: Int
-        layouts_url: String
-        is_private: Int
-        is_purchased: Int
-        in_library: Boolean
-        print_history_count: Int
-        app_id: ID
-        download_count: Int
-        view_count: Int
-        education: Education
-        remix_count: Int
-        make_count: Int
-        app_count: Int
-        images: [Image]
     }
 
     type Image {
