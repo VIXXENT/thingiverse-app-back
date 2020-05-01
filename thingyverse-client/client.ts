@@ -42,15 +42,15 @@ export const sendPopularThings = function (res: express.Response) {
     }
 }
 
-export const searchThings = async function({sort, cursor}:{sort:string, cursor?:Cursor}):Promise<Array<any>>{
+export const searchThings = async function({cursor}:{cursor:Cursor}):Promise<Array<any>>{
     const client = new RestClient(null, thingiverseApiUrl);
     const options:IRequestOptions = {
         queryParameters: {
             params: {                
                 access_token: getAccessToken(),
-                sort,
-                page: (cursor?.page?cursor.page:1),
-                per_page: (cursor?.per_page?cursor.per_page:10),
+                sort: cursor.sort,
+                page: (cursor.page),
+                per_page: (cursor.per_page),
             }
         }
     };

@@ -3,8 +3,9 @@ import * as thingiverseClient from '../thingyverse-client/client';
 export const sort = thingiverseClient.sort;
 
 export interface Cursor {
-    page: number,
+    page: number
     per_page: number
+    sort: string
 }
 
 interface ThingsCursoredList{
@@ -19,8 +20,8 @@ const resolverMap: IResolvers = {
             return await thingiverseClient.getThingDetails(id);
         },
 
-        thingsCursoredList: async(_, queryParams: { sort: string, cursor?: Cursor }) => {
-            const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:50};
+        thingsCursoredList: async(_, queryParams: { cursor: Cursor }) => {
+            const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:10, sort:'popular'};
             queryParams.cursor = cursor;
             const results = await thingiverseClient.searchThings(queryParams);
             const list:ThingsCursoredList = {

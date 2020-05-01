@@ -7,7 +7,7 @@ import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
     type Query {
-        thingsCursoredList(sort:String!, cursor:CursorInput): ThingsCursoredList
+        thingsCursoredList(cursor:CursorInput): ThingsCursoredList
         thing(id: ID!): Thing
         creator(id: ID!): Creator
         creators: [Creator]
@@ -17,11 +17,13 @@ const typeDefs = gql`
     input CursorInput {
         page: Int
         per_page: Int
+        sort: String!
     }
 
     type Cursor{
         page: Int
         per_page: Int
+        sort: String
     }
 
     type ThingsCursoredList{
