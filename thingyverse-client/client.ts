@@ -3,16 +3,11 @@ import express from "express";
 import {RestClient, IRequestOptions, IRestResponse} from "typed-rest-client";
 import { Cursor } from "../graphql/resolverMap";
 
-//import { Client } from "node-rest-client"; //incompatible with "noImplicitAny: true"
-const Client = (require("node-rest-client") as any).Client;//TODO: change to a typed rest client
-
-const oldClient = new Client();
 const thingiverseApiUrl = 'https://api.thingiverse.com';
 const searchResource = "/search";
 const thingsResource = "/things";
 const imagesResource = "/images";
-const searchUrl = thingiverseApiUrl+searchResource;
-const thingUrl = thingiverseApiUrl+thingsResource;
+const filesResource = "/files";
 export const sort = {
     relevant: 'relevant',
     text: 'text',
@@ -23,20 +18,9 @@ export const sort = {
 
 export const sendPopularThings = function (res: express.Response) {
     try {
-        const args = {
-            parameters: {
-                access_token: getAccessToken(),
-                sort: sort.popular
-            }
-        };
-
-        oldClient.get(searchUrl, args, (data: any) => {
-            try {
-                res.send(JSON.stringify(data));
-            } catch (error) {
-                sendErrorResponse(error, res)
-            }
-        });
+        searchThings({cursor:{page: 1, per_page: 50, sort: 'popular'}})
+        .then((things)=>res.send(JSON.stringify(things)))
+        .catch((error)=>sendErrorResponse(error, res));
     } catch (error) {
         sendErrorResponse(error, res)
     }
@@ -64,21 +48,9 @@ export const searchThings = async function({cursor}:{cursor:Cursor}):Promise<Arr
 
 export const sendThingDetails = function(thingId:any, res: express.Response){
     try {
-        const args = {
-            parameters: {
-                access_token: getAccessToken()
-            }
-        };
-
-        const thingIdUrl = thingUrl+"/"+thingId;
-
-        oldClient.get(thingIdUrl, args, (data: any) => {
-            try {
-                res.send(JSON.stringify(data));
-            } catch (error) {
-                sendErrorResponse(error, res)
-            }
-        });
+        getThingDetails(thingId)
+        .then((thing)=>res.send(JSON.stringify(thing)))
+        .catch((error)=>sendErrorResponse(error, res));
     } catch (error) {
         sendErrorResponse(error, res)
     }
@@ -116,6 +88,22 @@ export const getThingImages = function(thingId:string):Promise<any>{
     };
 
     return client.get<any>(`${thingsResource}/${thingId}${imagesResource}`, options)
+    .then((response)=>response?response.result:null)
+    .catch(logError)
+    ;
+}
+
+export const getThingFiles = function(thingId:string):Promise<any>{
+    const client = new RestClient(null, thingiverseApiUrl);
+    const options:IRequestOptions = {
+        queryParameters: {
+            params: {
+                access_token: getAccessToken()
+            }
+        }
+    };
+
+    return client.get<any>(`${thingsResource}/${thingId}${filesResource}`, options)
     .then((response)=>response?response.result:null)
     .catch(logError)
     ;

@@ -12,6 +12,7 @@ const typeDefs = gql`
         creator(id: ID!): Creator
         creators: [Creator]
         images: [Image]
+        files: [File]
     }
 
     input CursorInput {
@@ -53,6 +54,7 @@ const typeDefs = gql`
         edu_details_parts:[EduDetailsPart]
         education: Education
         file_count: Int
+        files: [File]
         files_url: String
         id: ID
         images: [Image]
@@ -99,6 +101,22 @@ const typeDefs = gql`
         is_following: Boolean
         location: String
         cover: String
+    }
+
+    type File{
+        id: ID!
+        name: String
+        size: Int
+        url: String
+        public_url: String
+        download_url: String
+        threejs_url: String
+        thumbnail: String
+        default_image: String
+        date: String
+        formatted_size: String
+        # meta_data: String
+        download_count: Int
     }
 
     type Image {

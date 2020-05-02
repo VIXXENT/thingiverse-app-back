@@ -38,6 +38,10 @@ const resolverMap: IResolvers = {
         images: async (thing: any) => {
             return await thingiverseClient.getThingImages(thing.id);
         },
+        files: async (thing: any) => {
+            const files = await thingiverseClient.getThingFiles(thing.id);
+            return files;
+        }
       },
 
 };
