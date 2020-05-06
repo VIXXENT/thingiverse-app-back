@@ -19,12 +19,14 @@ const typeDefs = gql`
         page: Int
         per_page: Int
         sort: String!
+        is_featured: Boolean
     }
 
     type Cursor{
         page: Int
         per_page: Int
         sort: String
+        is_featured: Boolean
     }
 
     type ThingsCursoredList{

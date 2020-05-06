@@ -6,6 +6,7 @@ export interface Cursor {
     page: number
     per_page: number
     sort: string
+    is_featured: boolean
 }
 
 interface ThingsCursoredList{
@@ -21,7 +22,7 @@ const resolverMap: IResolvers = {
         },
 
         thingsCursoredList: async(_, queryParams: { cursor: Cursor }) => {
-            const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:10, sort:'popular'};
+            const cursor:Cursor = queryParams.cursor? queryParams.cursor : {page:1, per_page:10, sort:'popular', is_featured: false};
             queryParams.cursor = cursor;
             const results = await thingiverseClient.searchThings(queryParams);
             const list:ThingsCursoredList = {

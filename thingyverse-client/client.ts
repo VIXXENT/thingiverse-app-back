@@ -18,7 +18,7 @@ export const sort = {
 
 export const sendPopularThings = function (res: express.Response) {
     try {
-        searchThings({cursor:{page: 1, per_page: 50, sort: 'popular'}})
+        searchThings({cursor:{page: 1, per_page: 50, sort: 'popular', is_featured:false}})
         .then((things)=>res.send(JSON.stringify(things)))
         .catch((error)=>sendErrorResponse(error, res));
     } catch (error) {
@@ -33,11 +33,17 @@ export const searchThings = async function({cursor}:{cursor:Cursor}):Promise<Arr
             params: {                
                 access_token: getAccessToken(),
                 sort: cursor.sort,
-                page: (cursor.page),
-                per_page: (cursor.per_page),
+                page: cursor.page,
+                per_page: cursor.per_page,
             }
         }
     };
+    if(cursor.is_featured){
+        options&&
+        options.queryParameters&&
+        options.queryParameters.params&&
+        (options.queryParameters.params.is_featured = 'true');
+    }
     
     return client.get(searchResource, options)
         .catch(logError)
